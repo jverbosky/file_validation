@@ -3,7 +3,8 @@ file_names = {
 }
 
 file_data = {
-  jpg: "xff\xd8\xff\xe0"
+  jpg: ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1"],
+  jpgb: ["\xFF\xD8\xFF\xE0"]
 }
 
 def jpg?(filename, data)
@@ -16,13 +17,34 @@ def file_type(file_hash)
   return response
 end
 
-data = File.binread("./public/images/flood-damage.jpg")[0, 4]
-p data  # "\xFF\xD8\xFF\xE0"
+binary = File.binread("./public/images/flood-damage.jpg")[0, 4]
+data_1 = binary
+p "data_1 encoding: #{data_1.encoding}"
+data_1.force_encoding("UTF-8")
+p "data_1 encoding after force_encoding: #{data_1.encoding}"
 
-data = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]
-p data  # "\xFF\xD8\xFF\xE1"
+# data_2 = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]
+# p data_2  # "\xFF\xD8\xFF\xE1"
 
-data = File.binread("./public/images/renamed_exe.jpg")[0, 4]
-p data  # "MZ\x90\x00"
+# data_3 = File.binread("./public/images/renamed_exe.jpg")[0, 4]
+# p data_3  # "MZ\x90\x00"
 
+# if file_data[:jpg].include? data_1
+#   puts "true"
+# else
+#   puts "false"
+# end
 
+# jpg_data = ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1"]
+jpg_data = file_data[:jpg]
+# p "jpg_data: #{jpg_data}"  # "jpg_data: [\"\\xFF\\xD8\\xFF\\xE0\", \"\\xFF\\xD8\\xFF\\xE1\"]"
+
+string_1 = "\xFF\xD8\xFF\xE0"
+p "string_1: #{string_1}"  # "string_1: \xFF\xD8\xFF\xE0"
+p "string_1 encoding: #{string_1.encoding}"
+string_1.force_encoding(Encoding::ASCII_8BIT)
+p "string_1 encoding after force_encoding: #{string_1.encoding}"
+
+p jpg_data.include? string_1
+p jpg_data.include? data_1
+p data_1 == string_1
