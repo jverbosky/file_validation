@@ -1,50 +1,56 @@
-file_names = {
-  jpg: ["jpg", "JPG", "jpe", "JPE", "jpeg", "JPEG"]
-}
+class FileValidation
 
-file_data = {
-  jpg: ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1"],
-  jpgb: ["\xFF\xD8\xFF\xE0"]
-}
+  attr_reader :file_types, :file_data
 
-def jpg?(filename, data)
-  # return status == (filename[:jpg] && data[0,4] == file_data[:jpg])
+  def initialize
+    @file_types = {
+      jpg: [".jpg", ".JPG", ".jpe", ".JPE", ".jpeg", ".JPEG"]
+    }
+    @file_data = {
+      jpg: ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1"]
+    }
+  end
+
+  def jpg?(file_ext, data)
+    (@file_types[:jpg].include? file_ext) && (@file_data[:jpg].include? data)
+  end
+
+  def file_type(file_hash)
+    response = "Not a valid image file."
+    response = "File is jpg." if jpg?(file_hash[:filename], file_hash[:tempfile])
+    return response
+  end
+
 end
 
-def file_type(file_hash)
-  response = "Not a valid image file."
-  response = "File is jpg." if jpg?(file_hash[:filename], file_hash[:tempfile])
-  return response
-end
+file_ext_1 = File.extname("./public/images/flood-damage.jpg")
+# p file_ext_1  # ".jpg"
+binary_1 = File.binread("./public/images/flood-damage.jpg")[0, 4]
+data_1 = binary_1.force_encoding("UTF-8")
+# p data_1  # "\xFF\xD8\xFF\xE0"
 
-binary = File.binread("./public/images/flood-damage.jpg")[0, 4]
-data_1 = binary
-p "data_1 encoding: #{data_1.encoding}"
-data_1.force_encoding("UTF-8")
-p "data_1 encoding after force_encoding: #{data_1.encoding}"
-
-# data_2 = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]
+file_ext_2 = File.extname("./public/images/borregoflooddamgage.JPG")
+# p file_ext_2  # ".JPG"
+binary_2 = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]
+data_2 = binary_2.force_encoding("UTF-8")
 # p data_2  # "\xFF\xD8\xFF\xE1"
 
-# data_3 = File.binread("./public/images/renamed_exe.jpg")[0, 4]
+file_ext_3 = File.extname("./public/images/renamed_exe.jpg")
+# p file_ext_3  # ".jpg"
+binary_3 = File.binread("./public/images/renamed_exe.jpg")[0, 4]
+data_3 = binary_3.force_encoding("UTF-8")
 # p data_3  # "MZ\x90\x00"
 
-# if file_data[:jpg].include? data_1
-#   puts "true"
-# else
-#   puts "false"
-# end
+validate = FileValidation.new
 
-# jpg_data = ["\xFF\xD8\xFF\xE0", "\xFF\xD8\xFF\xE1"]
-jpg_data = file_data[:jpg]
-# p "jpg_data: #{jpg_data}"  # "jpg_data: [\"\\xFF\\xD8\\xFF\\xE0\", \"\\xFF\\xD8\\xFF\\xE1\"]"
+# p validate.file_types[:jpg].include? file_ext_1  # true
+# p validate.file_types[:jpg].include? file_ext_2  # true
+# p validate.file_types[:jpg].include? file_ext_3  # true
 
-string_1 = "\xFF\xD8\xFF\xE0"
-p "string_1: #{string_1}"  # "string_1: \xFF\xD8\xFF\xE0"
-p "string_1 encoding: #{string_1.encoding}"
-string_1.force_encoding(Encoding::ASCII_8BIT)
-p "string_1 encoding after force_encoding: #{string_1.encoding}"
+# p validate.file_data[:jpg].include? data_1  # true
+# p validate.file_data[:jpg].include? data_2  # true
+# p validate.file_data[:jpg].include? data_3  # false
 
-p jpg_data.include? string_1
-p jpg_data.include? data_1
-p data_1 == string_1
+p validate.jpg?(file_ext_1, data_1)  # true
+p validate.jpg?(file_ext_2, data_2)  # true
+p validate.jpg?(file_ext_3, data_3)  # false (renamed EXE)
