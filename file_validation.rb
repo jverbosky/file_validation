@@ -16,13 +16,13 @@ def file_type(file_hash)
   return response
 end
 
-data = File.binread("./flood-damage.jpg")[0, 4]
+data = File.binread("./public/images/flood-damage.jpg")[0, 4]
 p data  # "\xFF\xD8\xFF\xE0"
 
-data = File.binread("./borregoflooddamgage.JPG")[0, 4]
+data = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]
 p data  # "\xFF\xD8\xFF\xE1"
 
-data = File.binread("./renamed_exe.jpg")[0, 4]
+data = File.binread("./public/images/renamed_exe.jpg")[0, 4]
 p data  # "MZ\x90\x00"
 
 
