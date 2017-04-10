@@ -24,19 +24,19 @@ class FileValidation
     details = {}
     details[:type] = file_hash[:type]
     details[:ext] = File.extname(file_hash[:filename])
-    # binary = File.binread(file_hash[:tempfile])[0, 4]
+    binary = File.binread(file_hash[:tempfile])[0, 4]
     # binary = File.binread("./public/images/flood-damage.jpg")[0, 4]  # use w/file_hash_1
     # binary = File.binread("./public/images/borregoflooddamgage.JPG")[0, 4]  # use w/file_hash_2
-    binary = File.binread("./public/images/renamed_exe.jpg")[0, 4]  # use w/file_hash_3
+    # binary = File.binread("./public/images/renamed_exe.jpg")[0, 4]  # use w/file_hash_3
     details[:data] = binary.force_encoding("UTF-8")
     return details
   end
 
   def validate_file(file_hash)
-    response = "File is not a valid image file."
+    response = "is not a valid image file."
     details = get_details(file_hash)
     case
-      when jpg?(details) then response = "File is a valid JPG."
+      when jpg?(details) then response = "is a valid JPG."
     end
     return response
   end
@@ -63,7 +63,7 @@ end
 # data_3 = binary_3.force_encoding("UTF-8")
 # # p data_3  # "MZ\x90\x00"
 
-validate = FileValidation.new
+# validate = FileValidation.new
 
 # # p validate.file_types[:jpg].include? file_ext_1  # true
 # # p validate.file_types[:jpg].include? file_ext_2  # true
@@ -79,14 +79,14 @@ validate = FileValidation.new
 
 # got hashes via file_hash = params[:file] in app.rb /post route
 # note - had to change :tempfile value from # to 0 and use File.binread for file on disk in place of :tempfile to test get_details()
-file_hash_1 = {:filename=>"flood-damage.jpg", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"flood-damage.jpg\"\r\nContent-Type: image/jpeg\r\n"}
+# file_hash_1 = {:filename=>"flood-damage.jpg", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"flood-damage.jpg\"\r\nContent-Type: image/jpeg\r\n"}
 # p validate.get_details(file_hash_1)  # {:type=>"image/jpeg", :ext=>".jpg", :data=>"\xFF\xD8\xFF\xE0"}
 # p validate.validate_file(file_hash_1)  # "File is a valid JPG."
 
-file_hash_2 = {:filename=>"borregoflooddamgage.JPG", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"borregoflooddamgage.JPG\"\r\nContent-Type: image/jpeg\r\n"}
+# file_hash_2 = {:filename=>"borregoflooddamgage.JPG", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"borregoflooddamgage.JPG\"\r\nContent-Type: image/jpeg\r\n"}
 # p validate.get_details(file_hash_2)  # {:type=>"image/jpeg", :ext=>".JPG", :data=>"\xFF\xD8\xFF\xE1"}
 # p validate.validate_file(file_hash_2)  # "File is a valid JPG."
 
-file_hash_3 = {:filename=>"renamed_exe.jpg", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"renamed_exe.jpg\"\r\nContent-Type: image/jpeg\r\n"}
+# file_hash_3 = {:filename=>"renamed_exe.jpg", :type=>"image/jpeg", :name=>"file", :tempfile=>0, :head=>"Content-Disposition: form-data; name=\"file\"; filename=\"renamed_exe.jpg\"\r\nContent-Type: image/jpeg\r\n"}
 # p validate.get_details(file_hash_3)  # {:type=>"image/jpeg", :ext=>".jpg", :data=>"MZ\x90\u0000"}
-p validate.validate_file(file_hash_3)  # "File is not a valid image file."
+# p validate.validate_file(file_hash_3)  # "File is not a valid image file."
