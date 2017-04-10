@@ -12,6 +12,6 @@ post '/' do
     # tempfile = params[:file][:tempfile]
     # filename = params[:file][:filename]
     file_hash = params[:file]
-    file_type = file_type(file_hash)
-    "#{file_type}"
+    # file_type = file_type(file_hash)
+    "#{file_hash}"
 end
